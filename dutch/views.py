@@ -3,7 +3,7 @@ from .models import Transaction, DongishGroup
 from .serializers import TransactionSerializer, DongishGroupSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from .permissions import IsAuthorOrReadOnly
 
 class TransactionListAPIView(generics.ListCreateAPIView):
     queryset = Transaction.objects.all()
@@ -11,6 +11,7 @@ class TransactionListAPIView(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
 
 class TransactionDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthorOrReadOnly,)
     queryset = Transaction.objects.all()
     model = Transaction
     serializer_class = TransactionSerializer
