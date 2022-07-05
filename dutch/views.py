@@ -43,7 +43,6 @@ def DongishGroupDutchCalculationAPIView(request, pk):
 
     return Response(data)
 
-
 ''' show total spends, total members and dutch of user for 
     each Dongish group which user is member of.   '''
 @api_view()
