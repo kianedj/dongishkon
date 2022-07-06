@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     phone = models.CharField(
         max_length=13,
-        unique=True,
+        unique=False,
         blank=True)
     otp = models.CharField(
         max_length=6, 
@@ -13,3 +13,4 @@ class CustomUser(AbstractUser):
     otp_expiry = models.DateTimeField(
         blank=True,
         null=True)
+
