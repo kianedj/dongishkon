@@ -61,6 +61,7 @@ def UserProfile(request):
         keepmem['total_spends'] = group.total_spends()
         keepmem['total_members'] = group.total_members()
         keepmem['dutch'] = group.dutch()
+        keepmem['user_spend'] = group.user_spend(user_id)
         data.append(keepmem)
         keepmem={}
 

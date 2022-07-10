@@ -4,22 +4,22 @@ from .helper import who_debt_owe_balance, who_pay_to_who
 
 class DongishGroup(models.Model):
     name = models.CharField(
-        max_length=150,
-        null=False,
-        blank=False,
-        unique=True)
+                            max_length=150,
+                            null=False,
+                            blank=False,
+                            unique=True)
     creator = models.ForeignKey(
-        CustomUser,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name= 'creator')
+                            CustomUser,
+                            blank=False,
+                            on_delete=models.CASCADE,
+                            related_name='creator')
     members = models.ManyToManyField(
-        CustomUser,
-        blank=True,
-        related_name='members')
+                            CustomUser,
+                            blank=True,
+                            related_name='members')
     explain = models.TextField(
-        null=True,
-        blank=True)
+                            null=True,
+                            blank=True)
 
     def __str__(self):
         return self.name
@@ -30,6 +30,15 @@ class DongishGroup(models.Model):
         for object in queryset:
             answer += object['amount']
         return answer
+    
+    def user_spend(self, user_id):
+        queryset = Transaction.objects.values('amount').filter(
+                            group__id=self.id,
+                            owner__id=user_id)
+        user_spend = 0
+        for trx in queryset:
+            user_spend += int(trx['amount'])
+        return user_spend
 
     def total_members(self):
         return self.members.all().count()
@@ -63,7 +72,7 @@ class DongishGroup(models.Model):
             else:
                 all_members_spends[member.username] = 0
         
-        #note: the function who_debt_owe_balance(*can only accept list*) so we needed to convert it. 
+        #note: the function who_debt_owe_balance(*can only accept list of lists*) so we needed to convert it. 
         all_members_spends = list(map(list,all_members_spends.items()))
 
         debtors, creditors, balanced = who_debt_owe_balance(
@@ -77,25 +86,25 @@ class DongishGroup(models.Model):
 
 class Transaction(models.Model):
     owner = models.ForeignKey(
-        CustomUser,
-        null=False,
-        blank=False,
-        on_delete=models.PROTECT)
+                            CustomUser,
+                            null=False,
+                            blank=False,
+                            on_delete=models.PROTECT)
     group = models.ForeignKey(
-        DongishGroup,
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE)
+                            DongishGroup,
+                            null=False,
+                            blank=False,
+                            on_delete=models.CASCADE)
     amount = models.IntegerField(
-        default=0,
-        blank=False,
-        null=False)
+                            default=0,
+                            blank=False,
+                            null=False)
     date = models.DateField(
-        auto_now=True,)
+                            auto_now=True,)
     about = models.TextField(
-        max_length=300,
-        null=True,
-        blank=True)
+                            max_length=300,
+                            null=True,
+                            blank=True)
 
     def __str__(self):
         return self.about
